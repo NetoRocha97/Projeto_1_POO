@@ -25,7 +25,6 @@ export class Produto {
             throw new Error("O campo substituição tributária do produto é obrigatório")
         
     }
-
     public dadosDoProduto(): String {
 
         this.verificaCampoObrigatorio();
