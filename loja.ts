@@ -10,7 +10,7 @@ export class Loja {
         public observacao: string, 
         public cnpj: string, 
         public inscricao_estadual: string,
-        public vendas: Array<Venda> = new Array<Venda>()) {}
+        public vendas: Array<Venda> = new Array<Venda>()) { }
         
 
     public vender(loja: Loja, datahora: string, ccf: string, coo: string, tipoPagamento: string, valorPagamento: number): Venda{
@@ -40,16 +40,14 @@ export class Loja {
         const _observacao : string = this.observacao? this.observacao : ""
   
         const _cnpj : string = `CNPJ: ${this.cnpj}`
-        const _inscricao_estadual : string = `IE: ${this.inscricao_estadual}`
+        const _ie : string = `IE: ${this.inscricao_estadual}`
 
         return(
 `${this.nome_loja}
 ${this.endereco.dados_endereco()}${_telefone}
 ${_observacao}
 ${_cnpj}
-${_inscricao_estadual}
+${_ie}
 `)
-
     }
-
 }

@@ -1,20 +1,20 @@
 import { Endereco } from './endereco';
 import { Loja } from './loja';
 import { Venda } from './venda';
-import { ItemVenda } from './itemvenda';
+import { ItemVenda } from './itemVenda';
 import { Produto } from './produto';
 
 function verificaCampoObrigatorio(mensagemEsperada: string, venda: Venda) {
   try {
-    venda.dadosDaVenda();
+    venda.dadosVenda();
   } catch (e) {
     expect(e.message).toBe(mensagemEsperada);
     }
 }
 
-function verificaCampoObrigatorioProduto(mensagemEsperada: string, produto: Produto) {
+function verificaCampoObrigatorioDoProduto(mensagemEsperada: string, produto: Produto) {
   try {
-    produto.verificaCampoObrigatorio();
+    produto.dadosDoProduto();
   } catch (e) {
     expect(e.message).toBe(mensagemEsperada);
     }
@@ -51,9 +51,9 @@ function validaPagamento(mensagemEsperada: string, venda: Venda) {
   }
 }  
 
-function finalizaVenda(mensagemEsperada: string, venda: Venda) {
+function finalDaVenda(mensagemEsperada: string, venda: Venda) {
   try {
-    venda.finalVenda();
+    venda.finalDaVenda();
   } catch (e) {
     expect(e.message).toBe(mensagemEsperada);
   }
@@ -73,7 +73,7 @@ const CNPJ = "11.111.111/1111-11"
 const INSCRICAO_ESTADUAL = "123456789"
 const CCF_VENDA = "021784"
 const COO_VENDA = "035804"
-
+const DATAHORA = "25/11/2020 10:30:40"
 const QUANTIDADE_1 = 10
 const QUANTIDADE_2 = 5
 const UNIDADE= "cx"
@@ -87,14 +87,10 @@ const DESCRICAO_2 = "Banana"
 const VALOR_UNITARIO_2 = 3.32
 const CODIGO_3 = 3
 const CODIGO_4 = 4
-
 const TIPO_PAGAMENTO_1 = "cartão de crédito"
 const TIPO_PAGAMENTO_2 = "cartão de débito"
 const TIPO_PAGAMENTO_3 = "dinheiro"
-
 const VALOR_PAGAMENTO = 100
-
-const DATAHORA = "25/11/2020 10:30:40"
 
 let ENDERECO : Endereco = new Endereco(LOGRADOURO, NUMERO, COMPLEMENTO,
   BAIRRO, MUNICIPIO, ESTADO, CEP);
@@ -103,7 +99,80 @@ let LOJA: Loja = new Loja(NOME_LOJA, ENDERECO, TELEFONE, OBSERVACAO, CNPJ, INSCR
 
 let venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_1, VALOR_PAGAMENTO);
 
-//Mensagens 
+let venda_sem_itens: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_1, VALOR_PAGAMENTO);
+
+let produtoSemValor: Produto = new Produto(
+  CODIGO_1, 
+  DESCRICAO_1, 
+  UNIDADE, 
+  0, 
+  SUBS_TRIBU
+);
+
+let produto_1: Produto = new Produto(
+  CODIGO_1, 
+  DESCRICAO_1, 
+  UNIDADE, 
+  VALOR_UNITARIO_1, 
+  SUBS_TRIBU
+);
+  
+let produto_3: Produto = new Produto(
+  CODIGO_3, 
+  DESCRICAO_1, 
+  UNIDADE, 
+  VALOR_UNITARIO_3, 
+  SUBS_TRIBU
+);
+
+let produto_4: Produto = new Produto(
+  CODIGO_4, 
+  DESCRICAO_2, 
+  UNIDADE, 
+  VALOR_UNITARIO_2, 
+  SUBS_TRIBU
+);
+
+
+let item_1: ItemVenda = new ItemVenda(1, produto_1, QUANTIDADE_1)
+
+let item_2: ItemVenda = new ItemVenda(2, produto_1, QUANTIDADE_2)
+
+let item_3: ItemVenda = new ItemVenda(3, produto_3, QUANTIDADE_1)
+
+let item_4: ItemVenda = new ItemVenda(4, produto_4, QUANTIDADE_2)
+
+let vendaComDoisItens: Venda = new Venda(
+  LOJA, 
+  DATAHORA,
+  CCF_VENDA, COO_VENDA, 
+  TIPO_PAGAMENTO_1,
+  VALOR_PAGAMENTO,   
+  new Array<ItemVenda>(item_1, item_2)
+
+)
+
+
+let vendaItemNeg: Venda = new Venda(
+  LOJA, 
+  DATAHORA,
+  CCF_VENDA,
+  COO_VENDA, 
+  TIPO_PAGAMENTO_1,
+  VALOR_PAGAMENTO, 
+  new Array<ItemVenda>(item_3, item_4)
+)
+
+let vendaComUmItem: Venda = new Venda(
+  LOJA, 
+  DATAHORA,
+  CCF_VENDA, COO_VENDA, 
+  TIPO_PAGAMENTO_3,
+  VALOR_PAGAMENTO,   
+  new Array<ItemVenda>(item_1)
+
+)
+
 const TEXTO_ESPERADO_CUPOM_COMPLETO = `Loja 1
 Log 1, 10 C1
 Bai 1 - Mun 1 - E1
@@ -122,86 +191,6 @@ Dinheiro 100.00
 Troco R$ 25.50`
 
 
-let venda_sem_itens: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_1, VALOR_PAGAMENTO);
-
-let produto01: Produto = new Produto(
-  CODIGO_1, 
-  DESCRICAO_1, 
-  UNIDADE, 
-  VALOR_UNITARIO_1, 
-  SUBS_TRIBU
-);
-
-let produto02: Produto = new Produto(
-  CODIGO_2, 
-  DESCRICAO_2, 
-  UNIDADE, 
-  VALOR_UNITARIO_2, 
-  SUBS_TRIBU
-);
-  
-
-let produto03: Produto = new Produto(
-  CODIGO_3, 
-  DESCRICAO_1, 
-  UNIDADE, 
-  VALOR_UNITARIO_3, 
-  SUBS_TRIBU
-);
-
-let produto04: Produto = new Produto(
-  CODIGO_4, 
-  DESCRICAO_2, 
-  UNIDADE, 
-  VALOR_UNITARIO_2, 
-  SUBS_TRIBU
-);
-
-let produto_gratis: Produto = new Produto(
-  CODIGO_1, 
-  DESCRICAO_1, 
-  UNIDADE, 
-  0, 
-  SUBS_TRIBU
-);
-
-let item01: ItemVenda = new ItemVenda(1, produto01, QUANTIDADE_1)
-
-let item02: ItemVenda = new ItemVenda(2, produto01, QUANTIDADE_2)
-
-let vendaComDoisItens: Venda = new Venda(
-  LOJA, 
-  DATAHORA,
-  CCF_VENDA, COO_VENDA, 
-  TIPO_PAGAMENTO_1,
-  VALOR_PAGAMENTO,   
-  new Array<ItemVenda>(item01, item02)
-
-)
-let item03: ItemVenda = new ItemVenda(3, produto03, QUANTIDADE_1)
-
-let item04: ItemVenda = new ItemVenda(4, produto04, QUANTIDADE_2)
-
-let vendaComDoisItensNegativo: Venda = new Venda(
-  LOJA, 
-  DATAHORA,
-  CCF_VENDA,
-  COO_VENDA, 
-  TIPO_PAGAMENTO_1,
-  VALOR_PAGAMENTO, 
-  new Array<ItemVenda>(item03, item04)
-)
-
-let vendaComUmItem: Venda = new Venda(
-  LOJA, 
-  DATAHORA,
-  CCF_VENDA, COO_VENDA, 
-  TIPO_PAGAMENTO_3,
-  VALOR_PAGAMENTO,   
-  new Array<ItemVenda>(item01)
-
-)
-
 test('ccf vazio', () => {
   let ccf_vazio: Venda = new Venda(LOJA, DATAHORA, "", COO_VENDA,  TIPO_PAGAMENTO_1, VALOR_PAGAMENTO);
     verificaCampoObrigatorio(`O campo CCF da venda é obrigatório`, ccf_vazio);
@@ -212,63 +201,63 @@ test('coo vazio', () => {
     verificaCampoObrigatorio(`O campo COO da venda é obrigatório`, coo_vazio);
 });
 
-test('código vazio', () => {
+test('código vazio', () =>{
   let codigo_vazio: Produto = new Produto(0, DESCRICAO_1, UNIDADE, VALOR_UNITARIO_1, SUBS_TRIBU);
-    verificaCampoObrigatorioProduto("O campo código do produto é obrigatório", codigo_vazio)
- })
+  verificaCampoObrigatorioDoProduto(`O campo código do produto é obrigatório`, codigo_vazio);
+});
 
-
- test('descrição vazia', () => {
+test('descrição vazia', () =>{
   let descricao_vazia: Produto = new Produto(CODIGO_1, "", UNIDADE, VALOR_UNITARIO_1, SUBS_TRIBU);
-    verificaCampoObrigatorioProduto("O campo descrição do produto é obrigatório", descricao_vazia)
- }) 
+  verificaCampoObrigatorioDoProduto(`O campo descrição do produto é obrigatório`, descricao_vazia);
+});
 
-
- test('unidade vazia', () => {
+test('unidade vazia', () =>{
   let unidade_vazia: Produto = new Produto(CODIGO_1, DESCRICAO_1, "", VALOR_UNITARIO_1, SUBS_TRIBU);
-    verificaCampoObrigatorioProduto("O campo unidade do produto é obrigatório", unidade_vazia)
- })
+  verificaCampoObrigatorioDoProduto(`O campo unidade do produto é obrigatório`, unidade_vazia);
+});
 
- test('valor unitário vazio', () => {
-  let valor_unit_vazio: Produto = new Produto(CODIGO_1, DESCRICAO_1, UNIDADE, 0, SUBS_TRIBU);
-    verificaCampoObrigatorioProduto("O campo valor unitário do produto é obrigatório", valor_unit_vazio)
- })
+test('valor unitário vazio', () =>{
+  let valor_uni_vazio: Produto = new Produto(CODIGO_1, DESCRICAO_1, UNIDADE, 0, SUBS_TRIBU);
+  verificaCampoObrigatorioDoProduto(`O campo valor unitário do produto é obrigatório`, valor_uni_vazio);
+});
 
-test('substituição tributária vazio', () => {
-  let substrib_vazio: Produto = new Produto(CODIGO_1, DESCRICAO_1, UNIDADE, VALOR_UNITARIO_1, "");
-    verificaCampoObrigatorioProduto("O campo substituição tributária do produto é obrigatório", substrib_vazio)
- })
+test('substituição tributária vazia', () =>{
+  let subs_trib_vazia: Produto = new Produto(CODIGO_1, DESCRICAO_1, UNIDADE, VALOR_UNITARIO_1, "");
+  verificaCampoObrigatorioDoProduto(`O campo substituição tributária é obrigatório`, subs_trib_vazia);
+});
+
 
 test('Sem itens', () =>{
   validaImpressao("Venda sem itens", venda_sem_itens)
 });
 
 test('Item duplicado', () =>{
-  validaItem("Produto duplicado", vendaComDoisItens, produto01, 5)
+  validaItem("Produto duplicado", vendaComDoisItens, produto_1, 5)
 });
 
 test('Quantidade do item', () =>{
-  validaItem("Item com quantidade zero ou negativa", venda_sem_itens, produto01, 0)
+  validaItem("Item com quantidade zero ou negativa", venda_sem_itens, produto_1, 0)
 });
 
-test('Valor produto', () =>{
-  validaItem("Produto com valor unitário zero ou negativo", vendaComDoisItensNegativo, produto_gratis, 3)
+test('Valor do produto', () =>{
+  validaItem("Produto com valor unitário zero ou negativo", vendaItemNeg, produtoSemValor, 3)
 });
 
 test('Valida Pagamento', () => {
-  let valida_pagamento: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, "", VALOR_PAGAMENTO);
+  let valida_pagamento: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, "fiado", VALOR_PAGAMENTO);
     validaPagamento("Tipo de pagamento inválido", valida_pagamento);
 });
 
 test('Valida tipo do Pagamento', () => {
-  let valida_tipo_pagamento: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_3, VALOR_PAGAMENTO, new Array<ItemVenda>(item01));
+  let valida_tipo_pagamento: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_3, VALOR_PAGAMENTO, new Array<ItemVenda>(item_1));
     validaPagamento("Operação inválida", valida_tipo_pagamento);
 });
 
-test('Valida troco', () => {
-  let valida_troco: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_3, 100, new Array<ItemVenda>(item01));
-    finalizaVenda("89", valida_troco);
+test('Valida retorno', () => {
+  let valida_retorno: Venda = new Venda(LOJA, DATAHORA, CCF_VENDA, COO_VENDA, TIPO_PAGAMENTO_3, 100, new Array<ItemVenda>(item_1));
+    finalDaVenda("89", valida_retorno);
 });
+
 
 test('Imprimir cupom', () => {
     imprimeCupom(TEXTO_ESPERADO_CUPOM_COMPLETO, vendaComUmItem);
