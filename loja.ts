@@ -1,5 +1,7 @@
 import { Endereco } from "./endereco";
 import { Venda } from "./venda";
+import { OperadorCupom } from './operadorCupom';
+import { Impressora } from './impressora';
 
 export class Loja {
 
@@ -10,7 +12,9 @@ export class Loja {
         public observacao: string, 
         public cnpj: string, 
         public inscricao_estadual: string,
-        public vendas: Array<Venda> = new Array<Venda>()) { }
+        public vendas: Array<Venda> = new Array<Venda>(),
+        public operador: OperadorCupom = new OperadorCupom(494715),
+        public impressoraFiscal: Impressora = new Impressora("\nSWEDA IF ST200", "01.00.05", "067", "SW031300000000045629")) { }
         
 
     public vender(loja: Loja, datahora: string, ccf: string, coo: string, tipoPagamento: string, valorPagamento: number): Venda{
@@ -19,6 +23,13 @@ export class Loja {
         return novaVenda;
     }    
         
+    public dadosFiscais(): string {
+        let dadosOperador: string = this.operador.dados_codigoOperador();
+        let dadosImpressora: string = this.impressoraFiscal.dados_ImpressoraFiscal();
+
+        return dadosOperador + dadosImpressora;
+
+    }
     public verificaCampoObrigatorio(): void {
   
         if (this.nome_loja == "")
@@ -32,7 +43,7 @@ export class Loja {
     
     }
 
-    public dadosDaLoja(): string {
+    public dados_loja(): string {
 
         let _telefone : string = this.telefone? `Tel ${this.telefone}` : ""
         _telefone = this.endereco.cep && _telefone? " " + _telefone : _telefone
@@ -40,14 +51,15 @@ export class Loja {
         const _observacao : string = this.observacao? this.observacao : ""
   
         const _cnpj : string = `CNPJ: ${this.cnpj}`
-        const _ie : string = `IE: ${this.inscricao_estadual}`
+        const _inscricao_estadual : string = `IE: ${this.inscricao_estadual}`
 
         return(
 `${this.nome_loja}
 ${this.endereco.dados_endereco()}${_telefone}
 ${_observacao}
 ${_cnpj}
-${_ie}
+${_inscricao_estadual}
 `)
+
     }
 }
